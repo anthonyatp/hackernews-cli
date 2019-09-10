@@ -21,8 +21,8 @@ def hackernews(posts: int):
     post_ids = response.json()
     requested_posts = []
 
-    for post_id in post_ids:
-        if len(requested_posts) == posts:
+    for i, post_id in enumerate(post_ids):
+        if i == posts:
             break
 
         post = requests.get(url=f'{BASE_URL}item/{post_id}.json').json()
