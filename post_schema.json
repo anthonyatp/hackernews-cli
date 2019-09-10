@@ -1,0 +1,29 @@
+{
+    "type": "object", 
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 256
+      },
+      "by": {
+        "type": "string",
+        "maxLength": 256
+      },
+      "score": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "kids": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "url": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "required": [ "title", "by" ]
+  }

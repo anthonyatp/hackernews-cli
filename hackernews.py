@@ -1,8 +1,14 @@
 import click
 import requests
 import json
+import jsonschema
 
 BASE_URL = 'https://hacker-news.firebaseio.com/v0/'
+
+# Loading required JSON schema for validation
+with open('post_schema.json', 'r') as f:
+    schema_data = f.read()
+schema = json.loads(schema_data)
 
 @click.command()
 @click.option(
@@ -25,8 +31,11 @@ def hackernews(posts: int):
         if i == posts:
             break
 
-        post = requests.get(url=f'{BASE_URL}item/{post_id}.json').json()
-        requested_posts.append(
+        try:
+            post = requests.get(url=f'{BASE_URL}item/{post_id}.json').json()
+            jsonschema.validate(post, schema)
+
+            requested_posts.append(
             {
                 'title': post['title'],
                 'uri': post['url'],
@@ -35,10 +44,14 @@ def hackernews(posts: int):
                 'comments': len(post['kids']),
                 'rank': post_ids.index(post_id) + 1
                 }
-        )
-    
+            )
+
+        except jsonschema.exceptions.ValidationError as e:
+            print("invalid JSON:", e)
+
+
     print(json.dumps(requested_posts, indent = 4))
-    
+
 
 if __name__ == '__main__':
     hackernews()
