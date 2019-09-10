@@ -41,7 +41,7 @@ def hackernews(posts: int):
                 'uri': post['url'],
                 'author': post['by'],
                 'points': post['score'],
-                'comments': len(post['kids']),
+                'comments': post['descendants'],
                 'rank': post_ids.index(post_id) + 1
                 }
             )
