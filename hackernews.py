@@ -24,7 +24,11 @@ def hackernews(posts: int):
         return
 
     response = requests.get(url=f'{BASE_URL}topstories.json')
+
+    # Return the JSON-encoded content of this response
     post_ids = response.json()
+
+    # Create an empty list which will store our posts
     requested_posts = []
 
     for i, post_id in enumerate(post_ids):
@@ -33,6 +37,8 @@ def hackernews(posts: int):
 
         try:
             post = requests.get(url=f'{BASE_URL}item/{post_id}.json').json()
+
+            # Validating JSON response from hackernews against our json schema
             jsonschema.validate(post, schema)
 
             requested_posts.append(
@@ -46,10 +52,12 @@ def hackernews(posts: int):
                 }
             )
 
+        # If the JSON validation fails, print error message.
         except jsonschema.exceptions.ValidationError as e:
             print("invalid JSON:", e)
 
 
+    # Print our JSON output with indent set to 4 so the formatting is clearer
     print(json.dumps(requested_posts, indent = 4))
 
 
